@@ -1,4 +1,4 @@
-# NetworkSecurity-Cryptography
+# NetworkSecurityandCryptography
 
 The project is an implementation of Non-Interactive Verifiable Secret Sharing improvements using Shamir’s Secret Sharing Protocol for key exchange and management.
 
