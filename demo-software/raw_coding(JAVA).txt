@@ -1,0 +1,82 @@
+import java.io.*;
+
+public class Dealer 
+{
+	public static int k=3,n=5;
+	public static int[] EncriptedCoefficient = new int[k];
+	
+	public static void main(String[] args) throws IOException
+	{
+		int i;
+		int Polynomial[]={4,5,7}; // f(x) = 4 + 5x + 7x^2
+	    	int Function[] = new int[n];  // k+1<=n
+		
+		for(i=0;i<=k;i++)
+			Function[i]=(Polynomial[0])+(Polynomial[1]*i)+(Polynomial[2]*i*i);
+		
+		for(i=0;i<k;i++)
+			EncriptedCoefficient[i] = Encript(Polynomial[i]); 
+		for(i=1;i<=k;i++)
+		{
+			int x=Shareholder(i,Function[i]);
+			if(x==0)
+				System.out.println("Shareholder "+i+" Did Not Receive");
+		}
+		
+		double val= subscriberCheck(k,1,Function[1],2,Function[2],3,Function[3]);
+				
+		if(Function[0]==val)
+			System.out.print("Good Job. Secret Decrypted");
+		else
+			System.out.print("Try Again... :'(");
+		
+	}
+	
+	static int Shareholder(int x,int fx)
+	{
+		int val1 = EncriptFunction(x);	  //E(a0)*E(i^0) + (E(a1)*E(i^1)) + (E(a2)*E(i^2)) + ...........(E(an)*E(i^n))	
+		int val2 = Encript(fx);           //E(f(x))
+		if(val1==val2)
+		{
+			System.out.println("Shareholder "+x+" Received");
+			return(1);
+		}
+		else
+			return(0);
+	}
+	
+	
+	static int EncriptFunction(int x)
+	{
+		long val = (long)EncriptedCoefficient[0] * (long)(Math.pow(EncriptedCoefficient[1],x)) * (long)(Math.pow(EncriptedCoefficient[2],x*x));
+		return (int) (val%17);
+	}
+	
+	static int Encript(int exponent) //p
+	{
+		int base = 5; // g
+		int modulus = 17; //x
+	    int result = 1;
+	    while (exponent > 0)
+	    {
+	        if (exponent % 2 == 1)
+	            result = (result * base) % modulus;
+	        exponent = exponent >> 1;
+	        base = (base * base) % modulus;
+	    }
+	    return result;
+	}
+		
+	static double subscriberCheck(int k,int x0,int y0,int x1,int y1,int x2,int y2)
+	{
+		double[] lagr = new double[k];
+		lagr[0]=(x1*x2)/((x0-x1)*(x0-x2));
+		lagr[1]=(x0*x2)/((x1-x0)*(x1-x2));
+		lagr[2]=(x0*x1)/((x2-x0)*(x2-x1));
+		double val=(lagr[0]*(double)y0)+(lagr[1]*(double)y1)+(lagr[2]*(double)y2);
+		return val;
+	}
+	
+	
+	
+}

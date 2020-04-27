@@ -1,0 +1,82 @@
+import java.io.*;
+
+public class Dealer 
+{
+	public static int k=3,n=5;
+	public static int[] EncryptedCoefficient = new int[k];
+	
+	public static void main(String[] args)
+		{
+		int i;
+		int Polynomial[]={4,5,7}; // f(x) = 4 + 5x + 7x^2
+	    int FunctionValue[] = new int[n];  // k+1<=n
+		
+		for(i=0;i<=k;i++)
+			FunctionValue[i]=(Polynomial[0])+(Polynomial[1]*i)+(Polynomial[2]*i*i);
+		
+		for(i=0;i<k;i++)
+			EncryptedCoefficient[i] = Encrypt(Polynomial[i]); 
+
+		for(i=1;i<=k;i++) {
+			int x=Shareholder(i,FunctionValue[i]);
+			if(x==0)
+				System.out.println("Shareholder "+i+" Did Not Recieve");
+		}
+		
+		double val= subscriberCheck(k,1,FunctionValue[1],2,FunctionValue[2],3,FunctionValue[3]);
+				
+		if(FunctionValue[0]==val)
+			System.out.print("Good Job. Secret Key Decryted");
+		else
+			System.out.print("Try Again... :'(");
+		
+	}
+	
+	static int Shareholder(int x,int fx)
+	{
+		int val1 = EncryptFunctionValue(x);	  //E(a0) * (E(a1)^i) * (E(a2)^(i*i))	
+		int val2 = Encrypt(fx);           //E(f(x))
+		if(val1==val2)
+		{
+			System.out.println("Shareholder "+x+" Recieved");
+			return(1);
+		}
+		else
+			return(0);
+	}
+	
+	
+	static int EncryptFunctionValue(int x)
+	{
+		long val = (long)EncryptedCoefficient[0] * (long)(Math.pow(EncryptedCoefficient[1],x)) * (long)(Math.pow(EncryptedCoefficient[2],x*x));
+		return (int) (val%17);
+	}
+	
+	static int Encrypt(int exponent) //p
+	{
+		int base = 5; // g
+		int modulus = 17; //x
+	    int result = 1;
+	    while (exponent > 0)
+	    {
+	        if (exponent % 2 == 1)
+	            result = (result * base) % modulus;
+	        exponent = exponent >> 1;
+	        base = (base * base) % modulus;
+	    }
+	    return result;
+	}
+		
+	static double subscriberCheck(int k,int x0,int y0,int x1,int y1,int x2,int y2)
+	{
+		double[] lagr = new double[k];
+		lagr[0]=(x1*x2)/((x0-x1)*(x0-x2));
+		lagr[1]=(x0*x2)/((x1-x0)*(x1-x2));
+		lagr[2]=(x0*x1)/((x2-x0)*(x2-x1));
+		double val=(lagr[0]*(double)y0)+(lagr[1]*(double)y1)+(lagr[2]*(double)y2);
+		return val;
+	}
+	
+	
+	
+}
