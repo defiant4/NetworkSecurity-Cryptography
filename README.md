@@ -28,7 +28,7 @@ The raw java file has also been provided for the actual logic before the product
 
 ## Contributing
 
-Currently contribution is not allowed. For pull/push request contact me personally.
+Currently contribution is not allowed. For pull/push request contact the author personally.
 
 ## Versioning
 
